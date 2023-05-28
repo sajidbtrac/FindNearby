@@ -9,6 +9,8 @@ import UIKit
 import CoreLocation
 
 class ViewController: UIViewController {
+    var queryType: String = "hospital"
+    
     var nameArray = [String]()
     let locationManager = CLLocationManager()
     
@@ -44,7 +46,7 @@ class ViewController: UIViewController {
         print(self.long)
         
         // using Google API url: Please register in Google nearby place API key to get the API key
-        let stringGoogleApi = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=\(self.lat),\(self.long)&radius=1500&type=clinic&type=clinic&key=\(myAPIKey)"
+        let stringGoogleApi = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=\(self.lat),\(self.long)&radius=1500&type=\(queryType)&type=\(queryType)&key=\(myAPIKey)"
         let url = NSURL(string: stringGoogleApi)
         URLSession.shared.dataTask(with: (url as URL?)!, completionHandler: { (data, response, error) -> Void in
             if let jsonObject = try? JSONSerialization.jsonObject(with: data!, options: .allowFragments) as? NSDictionary {
