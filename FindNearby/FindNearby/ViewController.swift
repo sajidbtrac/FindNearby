@@ -9,6 +9,7 @@ import UIKit
 import CoreLocation
 
 class ViewController: UIViewController {
+    let queryTypes = ["hospital", "police", "atm"]
     var queryType: String = "hospital"
     
     var nameArray = [String]()
@@ -17,15 +18,18 @@ class ViewController: UIViewController {
     var lat: Double = 0.00
     var long: Double = 0.00
     
-    let myAPIKey = "AIzaSyCXHLW1c8bOzeVR3PtURKV-OLOO796lpTo"
+    let myAPIKey = ApiDetails().apiKey
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        
+        typePicker.dataSource = self
+        typePicker.delegate = self
         
         searchApiPlaceFromGoogle()
     }
     
+    @IBOutlet var typePicker: UIPickerView!
     @IBOutlet var txtView: UITextView!
     @IBAction func btnHospital(_ sender: Any) {
         self.printPlaceNames()
@@ -45,19 +49,14 @@ class ViewController: UIViewController {
         print(self.lat)
         print(self.long)
         
-        // using Google API url: Please register in Google nearby place API key to get the API key
-        let stringGoogleApi = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=\(self.lat),\(self.long)&radius=1500&type=\(queryType)&type=\(queryType)&key=\(myAPIKey)"
+        let stringGoogleApi = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=\(self.lat),\(self.long)&radius=1500&type=\(self.queryType)&type=\(self.queryType)&key=\(self.myAPIKey)"
         let url = NSURL(string: stringGoogleApi)
         URLSession.shared.dataTask(with: (url as URL?)!, completionHandler: { (data, response, error) -> Void in
             if let jsonObject = try? JSONSerialization.jsonObject(with: data!, options: .allowFragments) as? NSDictionary {
                 if let placeArray = jsonObject.value(forKey: "results") as? NSArray {
-                    print("placeArray \(placeArray)")
                     for place in placeArray {
-                        print("place \(place)")
                         if let placeDict = place as? NSDictionary {
-                            print("placeDict \(placeDict)")
                             if let name = placeDict.value(forKey: "name") {
-                                print("name \(name)")
                                 self.nameArray.append(name as! String)
                             }
                         }
@@ -67,9 +66,27 @@ class ViewController: UIViewController {
         }).resume()
     }
     func printPlaceNames() {
-        print("kk")
-        print(nameArray.joined(separator: "\n \n") + "nn")
         self.txtView.text = nameArray.joined(separator: "\n \n")
     }
 }
 
+extension ViewController: UIPickerViewDataSource {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return queryTypes.count
+    }
+
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        print(queryTypes[row])
+        self.queryType = self.queryTypes[row]
+    }
+}
+
+extension ViewController: UIPickerViewDelegate {
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return queryTypes[row]
+    }
+}
