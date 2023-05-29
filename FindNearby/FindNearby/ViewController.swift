@@ -12,12 +12,9 @@ import CoreLocation
 class ViewController: UIViewController {
     let queryTypes = ["hospital", "police", "atm"]
     var queryType: String = "hospital"
-    
     let maxDistance: Double = 2000
     
-    //    var nameArray = [String]()
     let locationManager = CLLocationManager()
-    
     var lat: Double = 0.00
     var long: Double = 0.00
     
@@ -34,15 +31,9 @@ class ViewController: UIViewController {
     }
     
     @IBOutlet var typePicker: UIPickerView!
-    //    @IBOutlet var txtView: UITextView!
     @IBOutlet weak var mainMapView: MKMapView!
-    //    @IBAction func btnHospital(_ sender: Any) {
-    //        self.printPlaceNames()
-    //    }
     
     func searchApiPlaceFromGoogle() {
-        //        self.nameArray.removeAll()
-        
         // reset map
         let allAnnotations = self.mainMapView.annotations
         self.mainMapView.removeAnnotations(allAnnotations)
@@ -62,10 +53,10 @@ class ViewController: UIViewController {
         self.long = currentLocation.coordinate.longitude
         
         // print location on console
-        print(self.lat)
-        print(self.long)
+//        print(self.lat)
+//        print(self.long)
         
-        // test
+        // api test
         //https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=23.791083194820935,90.40347483722643&radius=1500&type=police&key=AIzaSyCXHLW1c8bOzeVR3PtURKV-OLOO796lpTo
         
         let stringGoogleApi = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=\(self.lat),\(self.long)&radius=1500&type=\(self.queryType)&type=\(self.queryType)&key=\(self.myAPIKey)"
@@ -86,7 +77,6 @@ class ViewController: UIViewController {
                                 annotation.title = name as? String ?? ""
                                 annotation.coordinate = CLLocationCoordinate2D(latitude: lat as! CLLocationDegrees, longitude: lng as! CLLocationDegrees)
                                 
-                                print()
                                 // add the location annotation to map
                                 self.mainMapView.addAnnotation(annotation)
                             }
@@ -96,9 +86,6 @@ class ViewController: UIViewController {
             }
         }).resume()
     }
-    //    func printPlaceNames() {
-    //        self.txtView.text = nameArray.joined(separator: "\n \n")
-    //    }
 }
 
 extension ViewController: UIPickerViewDataSource {
