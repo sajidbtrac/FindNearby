@@ -10,3 +10,4 @@ import UIKit
 class ApiDetails: NSObject {
     let apiKey = "AIzaSyCXHLW1c8bOzeVR3PtURKV-OLOO796lpTo"
 }
+

@@ -36,6 +36,8 @@ class ViewController: UIViewController {
     }
     
     func searchApiPlaceFromGoogle() {
+        self.nameArray.removeAll()
+        
         // get permissions of location services
         locationManager.requestWhenInUseAuthorization()
         
@@ -48,6 +50,9 @@ class ViewController: UIViewController {
         // print location on console
         print(self.lat)
         print(self.long)
+        
+        // test
+        //https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=23.791083194820935,90.40347483722643&radius=1500&type=police&key=AIzaSyCXHLW1c8bOzeVR3PtURKV-OLOO796lpTo
         
         let stringGoogleApi = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=\(self.lat),\(self.long)&radius=1500&type=\(self.queryType)&type=\(self.queryType)&key=\(self.myAPIKey)"
         let url = NSURL(string: stringGoogleApi)
@@ -74,7 +79,7 @@ extension ViewController: UIPickerViewDataSource {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
-    
+
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return queryTypes.count
     }
@@ -82,6 +87,7 @@ extension ViewController: UIPickerViewDataSource {
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         print(queryTypes[row])
         self.queryType = self.queryTypes[row]
+        searchApiPlaceFromGoogle()
     }
 }
 
